@@ -874,12 +874,6 @@ describe("acquireSimpleCompletionModelForAgent", () => {
       api: "openai-chatgpt-responses",
       baseUrl: "https://chatgpt.com/backend-api/codex",
     });
-    hoisted.ensureAuthProfileStoreMock.mockReturnValue({
-      version: 1,
-      profiles: {
-        "openai:platform": { type: "api_key", provider: "openai", key: "placeholder" },
-      },
-    });
     hoisted.getApiKeyForModelMock.mockResolvedValue({
       apiKey: "placeholder",
       profileId: "openai:platform",
@@ -906,11 +900,7 @@ describe("acquireSimpleCompletionModelForAgent", () => {
       });
       expect(modelResolver).toHaveBeenCalledTimes(2);
       expect(
-<<<<<<< HEAD
         (callArg(hoisted.getApiKeyForModelMock, 0) as { model?: { api?: string } }).model?.api,
-=======
-        (callArg(hoisted.getApiKeyForModelMock) as { model?: { api?: string } }).model?.api,
->>>>>>> 47a7b0f928 (fix(auth): retain working credentials when accounts are saved)
       ).toBe("openai-responses");
       // Route materialization re-resolves the model on a multi-agent config; both
       // calls must keep the authorized agentId or the second falls back to
@@ -924,7 +914,6 @@ describe("acquireSimpleCompletionModelForAgent", () => {
     }
   });
 
-<<<<<<< HEAD
   it.each(["mixed credentials", "same-route fallback", "pinned profile"])(
     "preserves subscription selection with %s",
     async (scenario) => {
@@ -1007,11 +996,14 @@ describe("acquireSimpleCompletionModelForAgent", () => {
         if (!("error" in result)) {
           await result[Symbol.asyncDispose]();
         }
-=======
+      }
+    },
+  );
+
   it("keeps the Codex route for OAuth auth", async () => {
-    const cfg = {
+    const cfg: OpenClawConfig = {
       agents: { defaults: { model: "openai/gpt-5.5" } },
-    } as unknown as OpenClawConfig;
+    };
     const modelResolver = createOpenAIRouteModelResolver({
       api: "openai-chatgpt-responses",
       baseUrl: "https://chatgpt.com/backend-api/codex",
@@ -1055,10 +1047,9 @@ describe("acquireSimpleCompletionModelForAgent", () => {
     } finally {
       if (!("error" in result)) {
         await result[Symbol.asyncDispose]();
->>>>>>> 47a7b0f928 (fix(auth): retain working credentials when accounts are saved)
       }
-    },
-  );
+    }
+  });
 
   it("keeps an authored custom OpenAI route untouched", async () => {
     const cfg = {
@@ -1068,7 +1059,6 @@ describe("acquireSimpleCompletionModelForAgent", () => {
             api: "openai-responses",
             apiKey: "fixture-api-key",
             baseUrl: "https://relay.example/v1",
-            apiKey: "placeholder",
             models: [{ id: "gpt-5.5" }],
           },
         },
@@ -1109,15 +1099,11 @@ describe("acquireSimpleCompletionModelForAgent", () => {
   it("honors an explicit model ref while selecting its auth-compatible route", async () => {
     const cfg = {
       agents: { defaults: { model: "anthropic/claude-opus-4-6" } },
-<<<<<<< HEAD
       models: {
         providers: {
           openai: { baseUrl: "https://api.openai.com/v1", models: [], apiKey: "placeholder" },
         },
       },
-=======
-      models: { providers: { openai: { apiKey: "placeholder", baseUrl: "", models: [] } } },
->>>>>>> 47a7b0f928 (fix(auth): retain working credentials when accounts are saved)
     } as unknown as OpenClawConfig;
     const modelResolver = createOpenAIRouteModelResolver({
       api: "openai-chatgpt-responses",
