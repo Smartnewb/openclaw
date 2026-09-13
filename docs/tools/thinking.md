@@ -55,15 +55,15 @@ Use `params.thinking` to set the default for one configured model without changi
 the default for your other models. The key must match the provider and model you
 actually select, including any model path exposed by a custom provider.
 
-For example, if your configured `opencodex-chat` provider exposes
-`devin/swe-2-high`, merge this entry into your existing model configuration:
+Replace `<provider>/<model>` with a configured model's full ID, then merge this
+entry into your existing model configuration:
 
 ```json5
 {
   agents: {
     defaults: {
       models: {
-        "opencodex-chat/devin/swe-2-high": {
+        "<provider>/<model>": {
           params: { thinking: "high" },
         },
       },
@@ -72,9 +72,8 @@ For example, if your configured `opencodex-chat` provider exposes
 }
 ```
 
-This example assumes that you have already configured the custom provider and
-that its endpoint supports the selected effort. A model name alone does not
-configure a provider or guarantee how the upstream service handles reasoning.
+The provider must already be configured, and the model must support the selected
+thinking level.
 
 An inline directive, a saved session override, or a per-agent `thinkingDefault`
 still takes precedence. Send `/think default` to clear a saved session override;
